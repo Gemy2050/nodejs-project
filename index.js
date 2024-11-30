@@ -5,7 +5,9 @@ require("dotenv").config();
 const Article = require("./models/Article");
 
 mongoose
-  .connect(process.env.DB_URL)
+  .connect(
+    "mongodb+srv://gemy:123@firstnodejscluster.u3cgh.mongodb.net/?retryWrites=true&w=majority&appName=FirstNodeJSCluster"
+  )
   .then(() => {
     console.log("Connected to MongoDB");
   })
