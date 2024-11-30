@@ -1,12 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const Article = require("./models/Article");
 
 mongoose
-  .connect(
-    "mongodb+srv://gemy:123@firstnodejscluster.u3cgh.mongodb.net/?retryWrites=true&w=majority&appName=FirstNodeJSCluster"
-  )
+  .connect(process.env.DB_URL)
   .then(() => {
     console.log("Connected to MongoDB");
   })
