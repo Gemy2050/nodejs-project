@@ -27,12 +27,6 @@ mongoose
 const app = express();
 app.use(express.json());
 
-// Serve Swagger UI static files
-app.use(
-  "/api-docs",
-  express.static(path.join(__dirname, "node_modules/swagger-ui-express/static"))
-);
-
 // Add CORS middleware
 app.use((_, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -40,6 +34,12 @@ app.use((_, res, next) => {
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
+
+// Serve Swagger UI static files
+app.use(
+  "/api-docs",
+  express.static(path.join(__dirname, "node_modules/swagger-ui-express/static"))
+);
 
 // Setup Swagger
 const YAML = require("yamljs");

@@ -23,5 +23,13 @@
       "src": "/(.*)",
       "dest": "index.js"
     }
+  ],
+  "headers": [
+    {
+      "source": "/api-docs/(.*)",
+      "headers": [
+        { "key": "Content-Type", "value": "application/javascript" }
+      ]
+    }
   ]
 }
