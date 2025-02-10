@@ -6,31 +6,22 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    {
-      "src": "/api-docs/(.*)",
-      "dest": "index.js"
-    },
-    {
-      "src": "/users/(.*)",
-      "dest": "index.js"
-    },
-    {
-      "src": "/articles/(.*)",
-      "dest": "index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "index.js"
-    }
-  ],
-  "headers": [
+  "rewrites": [
     {
       "source": "/api-docs/(.*)",
-      "headers": [
-        { "key": "Content-Type", "value": "application/javascript" }
-      ]
+      "destination": "index.js"
+    },
+    {
+      "source": "/users/(.*)",
+      "destination": "index.js"
+    },
+    {
+      "source": "/articles/(.*)",
+      "destination": "index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "index.js"
     }
   ]
 }
-
