@@ -6,8 +6,6 @@ const YAML = require("yamljs");
 const path = require("path");
 require("dotenv").config();
 
-const swaggerDocument = YAML.load(path.join(__dirname, "./swagger.yaml"));
-
 // Import routes
 const articleRoutes = require("./routes/articleRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -29,6 +27,12 @@ mongoose
 const app = express();
 app.use(express.json());
 
+// Serve Swagger UI static files
+app.use(
+  "/api-docs",
+  express.static(path.join(__dirname, "node_modules/swagger-ui-express/static"))
+);
+
 // Add CORS middleware
 app.use((_, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -37,7 +41,10 @@ app.use((_, res, next) => {
   next();
 });
 
-// Serve Swagger UI at /api-docs
+// Setup Swagger
+const YAML = require("yamljs");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = YAML.load(path.join(__dirname, "./swagger.yaml"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Use routes
