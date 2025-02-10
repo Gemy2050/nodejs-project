@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: Test Node.js API
+  description: API Documentation for Testing
+  version: 1.0.0
+  contact:
+    name: Mohamed Gamal
+    email: gemy46349@email.com
+
+servers:
+  - url: https://nodejs-project-tawny.vercel.app
+    description: Production Server
+  - url: http://localhost:3000
+    description: Development Server
+
+tags:
+  - name: Users
+    description: User operations
+  - name: Articles
+    description: Article operations
+
+paths:
+  /users:
+    get:
+      tags: [Users]
+      summary: Get all users
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      tags: [Users]
+      summary: Create new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User created successfully
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      tags: [Users]
+      summary: Update user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: User updated successfully
+    delete:
+      tags: [Users]
+      summary: Delete user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User deleted successfully
+
+  /articles:
+    get:
+      tags: [Articles]
+      summary: Get all articles
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+    post:
+      tags: [Articles]
+      summary: Create new article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        "201":
+          description: Article created successfully
+
+  /articles/{id}:
+    get:
+      tags: [Articles]
+      summary: Get article by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+    put:
+      tags: [Articles]
+      summary: Update article
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        "200":
+          description: Article updated successfully
+    delete:
+      tags: [Articles]
+      summary: Delete article
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Article deleted successfully
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - name
+        - email
+        - password
+
+    Article:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+
+      required:
+        - title
+        - body

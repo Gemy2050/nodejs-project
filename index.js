@@ -1,14 +1,26 @@
 const express = require("express");
 const mongoose = require("mongoose");
+
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
 require("dotenv").config();
 
-const Article = require("./models/Article");
-const User = require("./models/User");
+// Import routes
+const articleRoutes = require("./routes/articleRoutes");
+const userRoutes = require("./routes/userRoutes");
 
+// Load Swagger YAML file
+const swaggerDocument = YAML.load("./swagger.yaml");
+
+// Connect to MongoDB
 mongoose
   .connect(process.env.DB_URL)
   .then(() => {
     console.log("Connected to MongoDB");
+    //* Listen to port 3000
+    app.listen(3000, () => {
+      console.log("Server is running on port 3000");
+    });
   })
   .catch((err) => {
     console.log("Connection Error", err);
@@ -25,180 +37,11 @@ app.use((_, res, next) => {
   next();
 });
 
-app.get("/hello", (req, res) => {
-  res.send("Hello World");
-});
+// Serve Swagger UI at /api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.post("/hi", (req, res) => {
-  res.send("Hi There");
-});
-
-app.get("/sayHello", (req, res) => {
-  // Return JSON
-  res.json({
-    name: req.query.name,
-    age: req.query.age,
-    country: "Egypt",
-  });
-});
-
-app.get("/findSum/:number1/:number2", (req, res) => {
-  const { number1, number2 } = req.params;
-  const sum = parseInt(number1) + parseInt(number2);
-  res.send(`The sum of ${number1} and ${number2} is equal ${sum}`);
-});
-
-app.get("/findSumFromBody", (req, res) => {
-  if (!req.body.number1 || !req.body.number2) {
-    res.send(`No numbers provided in body`);
-    return;
-  }
-  const { number1, number2 } = req.body;
-  res.send(`the sum = ${number1 + number2}`);
-});
-
-// Send Html in Response
-app.get("/html", (req, res) => {
-  res.send("<h1>Hello There</h1>");
-});
-
-// Send Html File in Response
-app.get("/file", (req, res) => {
-  res.sendFile(__dirname + "/views/hello.html");
-});
-
-// Send Html File with dynamic values (js) in Response
-app.get("/dynamicFile", (req, res) => {
-  const name = "Mohamed Gamal";
-  res.render("profile.ejs", {
-    name: name,
-    age: 20,
-  });
-});
+// Use routes
+app.use("/", articleRoutes); // Routes for /articles, /articles/:articleId, etc.
+app.use("/", userRoutes);
 
 //* ================================================
-//* ============== Articles Endpoints ==============
-//* ================================================
-
-// Create New Article
-app.post("/articles", async (req, res) => {
-  const { title, body } = req.body;
-  const newArticle = new Article({
-    title,
-    body,
-    numberOfLikes: 0,
-  });
-  await newArticle.save();
-
-  res.status(201).json(newArticle);
-});
-
-// Get All Articles
-app.get("/articles", async (req, res) => {
-  const articles = await Article.find();
-  res.json(articles);
-});
-
-// Get Specific Article By ID
-app.get("/articles/:articleId", async (req, res) => {
-  try {
-    const article = await Article.findById(req.params.articleId);
-    res.json(article);
-  } catch (error) {
-    res.send("something went wrong", error.message);
-  }
-});
-
-// Update Specific Article By ID
-app.put("/articles/:articleId", async (req, res) => {
-  try {
-    const article = await Article.findByIdAndUpdate(
-      req.params.articleId,
-      req.body,
-      { new: true }
-    );
-    res.json(article);
-  } catch (error) {
-    res.send("something went wrong", error.message);
-  }
-});
-
-// Delete Specific Article By ID
-app.delete("/articles/:articleId", async (req, res) => {
-  try {
-    const article = await Article.findByIdAndDelete(req.params.articleId);
-    res.json({ message: "Article deleted successfully", article });
-  } catch (error) {
-    res.send("something went wrong", error.message);
-  }
-});
-
-// Return Articles in HTML File
-app.get("/showArticles", async (req, res) => {
-  const articles = await Article.find();
-  res.render("articles.ejs", {
-    articles: articles,
-  });
-});
-
-//* ================================================
-//* ============== Users Endpoints ==============
-//* ================================================
-
-// Create New User
-app.post("/register", async (req, res) => {
-  const { email, password, name } = req.body;
-  if (!email || !password || !name) {
-    res.status(400).send("Please provide all fields");
-  }
-
-  const newUser = new User({
-    email,
-    password,
-    name,
-  });
-  await newUser.save();
-  res.status(201).json(newUser);
-});
-
-// Get Specific User By ID
-app.get("/users/:userId", async (req, res) => {
-  try {
-    if (!req.params.userId) {
-      res.status(400).send("Please provide user id");
-    }
-    const user = await User.findById(req.params.userId);
-    if (!user) {
-      res.status(404).send("User not found");
-    }
-    res.json(user);
-  } catch (error) {
-    res.send("something went wrong", error.message);
-  }
-});
-
-// Login User
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    res.status(400).send("Please provide all fields");
-  }
-  const user = await User.findOne({ email });
-  if (!user) {
-    res.status(404).send("User not found");
-  }
-
-  if (user.password !== password) {
-    res.status(400).send("Wrong password");
-    return;
-  }
-  res.json(user);
-});
-
-//* ================================================
-
-//* Listen to port 3000
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
