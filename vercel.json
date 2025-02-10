@@ -9,15 +9,27 @@
   "routes": [
     {
       "src": "/api-docs/(.*)",
-      "dest": "/api-docs"
+      "dest": "index.js"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/users/(.*)",
+      "dest": "index.js"
+    },
+    {
+      "src": "/articles/(.*)",
+      "dest": "index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "index.js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api-docs/(.*)",
+      "headers": [
+        { "key": "Content-Type", "value": "application/javascript" }
+      ]
     }
   ]
 }

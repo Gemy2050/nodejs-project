@@ -41,9 +41,6 @@ app.use(
   express.static(path.join(__dirname, "node_modules/swagger-ui-express/static"))
 );
 
-// Setup Swagger
-const YAML = require("yamljs");
-const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = YAML.load(path.join(__dirname, "./swagger.yaml"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
