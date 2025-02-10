@@ -42,7 +42,18 @@ app.use(
 );
 
 const swaggerDocument = YAML.load(path.join(__dirname, "./swagger.yaml"));
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Serve Swagger UI assets explicitly
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, {
+    customCssUrl: "https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui.css",
+    customJs: [
+      "https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-bundle.js",
+      "https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-standalone-preset.js",
+    ],
+  })
+);
 
 // Use routes
 app.use("/", articleRoutes); // Routes for /articles, /articles/:articleId, etc.
