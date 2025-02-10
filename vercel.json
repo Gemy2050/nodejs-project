@@ -12,7 +12,11 @@
       "dest": "index.js"
     },
     {
-      "src": "/api/(.*)",
+      "src": "/users/(.*)",
+      "dest": "index.js"
+    },
+    {
+      "src": "/articles/(.*)",
       "dest": "index.js"
     },
     {
