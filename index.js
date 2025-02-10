@@ -3,14 +3,14 @@ const mongoose = require("mongoose");
 
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
+const path = require("path");
 require("dotenv").config();
+
+const swaggerDocument = YAML.load(path.join(__dirname, "./swagger.yaml"));
 
 // Import routes
 const articleRoutes = require("./routes/articleRoutes");
 const userRoutes = require("./routes/userRoutes");
-
-// Load Swagger YAML file
-const swaggerDocument = YAML.load("./swagger.yaml");
 
 // Connect to MongoDB
 mongoose
