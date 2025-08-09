@@ -8,18 +8,24 @@ const User = require("../models/User");
 
 // Create New User
 router.post("/register", async (req, res) => {
-  const { email, password, name } = req.body;
-  if (!email || !password || !name) {
-    res.status(400).send("Please provide all fields");
-  }
+  try {
+    const { email, password, name } = req.body;
+    if (!email || !password || !name) {
+      res.status(400).send("Please provide all fields");
+    }
 
-  const newUser = new User({
-    email,
-    password,
-    name,
-  });
-  await newUser.save();
-  res.status(201).json(newUser);
+    console.log("Enter The Controller");
+
+    const newUser = new User({
+      email,
+      password,
+      name,
+    });
+    await newUser.save();
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).send("Something went wrong", error.message);
+  }
 });
 
 // Get Specific User By ID

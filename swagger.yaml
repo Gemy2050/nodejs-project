@@ -20,7 +20,7 @@ tags:
     description: Article operations
 
 paths:
-  /users:
+  /register:
     post:
       tags: [Users]
       summary: Create new user
@@ -161,8 +161,6 @@ components:
     User:
       type: object
       properties:
-        id:
-          type: string
         name:
           type: string
         email:
